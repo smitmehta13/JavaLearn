@@ -1,0 +1,25 @@
+package com.jlear;
+
+import com.jlear.Model.User;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+
+
+
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+@EnableMongoRepositories
+public class App 
+{
+    public static void main( String[] args ){
+        SpringApplication.run(App.class, args);
+        User user = new User();
+        try {
+            Thread.sleep(1000); // Delay in milliseconds
+            System.out.println(user.toString());;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
