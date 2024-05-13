@@ -1,11 +1,9 @@
-package com.jlear.Controller;
+package com.jlear.User;
 
-import com.jlear.Model.User;
-import com.jlear.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.Map;
 
 
 
@@ -42,12 +40,12 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
+    public Map<String, String> deleteUser(@PathVariable String id) {
+       return userService.deleteUser(id);
     }
 
     @GetMapping("/find/{name}")
-    public Boolean findUserByName(@PathVariable String name) {
+    public List<User> findUserByName(@PathVariable String name) {
         return userService.findUsersByName(name);
     }
     

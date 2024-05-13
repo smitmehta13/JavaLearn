@@ -1,4 +1,4 @@
-package com.jlear.Model;
+package com.jlear.User;
 
 import java.time.LocalDate;
 import java.time.Month;

@@ -1,25 +1,22 @@
-package com.jlear.Service;
+package com.jlear.User;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jlear.Model.User;
-import com.jlear.repository.UserRepository;
 
 @Service
 public class UserService {
     @Autowired
     private final UserRepository userRepo;
 
-    private ObjectMapper objectMapper;
-
-    public UserService(ObjectMapper objectMapper, UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepo = userRepository;
-        this.objectMapper = objectMapper;
     }
 
     public List<User> getAllUsers() {
@@ -34,18 +31,10 @@ public class UserService {
                     .orElseThrow(() -> new NoSuchElementException("User not found"));
             return requestedUser;
         } catch (NoSuchElementException e) {
-            // Construct JSON response for no user found
-            String jsonResponse = "{\"error\": \"No user found\"}";
-            // Log the error if needed
+
             System.err.println("No user found for id: " + id);
-            // Return JSON response
-            try {
-                return objectMapper.readValue(jsonResponse, User.class);
-            } catch (Exception ex) {
-                // Handle JSON parsing exception
-                ex.printStackTrace();
-                return null;
-            }
+
+            return new User("", "No User found for id: " + id, "", "", LocalDate.now());
         }
     }
 
@@ -56,7 +45,8 @@ public class UserService {
 
     public User updateUser(String id, User user) {
         // Find the existing user by ID
-        User existingUser = userRepo.findById("ID"+id).orElseThrow(() -> new NoSuchElementException("User not found"));
+        User existingUser = userRepo.findById("ID" + id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
         // Update the fields
         existingUser.setEmail(user.getEmail());
         existingUser.setUsername(user.getUsername());
@@ -65,12 +55,29 @@ public class UserService {
         return userRepo.save(existingUser);
     }
 
-    public void deleteUser(String id) {
-        // Find the user by ID and delete it
-        userRepo.deleteById("ID"+id);
-    } 
+    public Map<String, String> deleteUser(String id) {
+        Map<String, String> response = new HashMap<>();
+        if (id == null || id.isEmpty()) {
+            response.put("message", "ID is Null");
+        } else {
+            Optional<User> existingUser = userRepo.findById("ID" + id);
+            if (existingUser.isPresent()) {
+                userRepo.deleteById("ID" + id);
+                response.put("message", "User Deleted Successfully for ID: " + id);
+            } else {
+                response.put("message", "User Does Not Exist for ID: " + id);
+            }
+        }
+        return response;
+    }
 
-    public Boolean findUsersByName(String name){
-        return userRepo.existsById("ID5");
+    public List<User> findUsersByName(String name) {
+        if (name == null || name.isEmpty()) {
+            return List.of(
+                new User() 
+            );
+        } 
+        List<User> userFromDb = userRepo.findByUsername(name);
+        return userFromDb;
     }
 }

@@ -1,12 +1,16 @@
-package com.jlear.repository;
+package com.jlear.User;
 
+
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import com.jlear.Model.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
+
+    @Query("{ 'username' : ?0 }")
+    List<User> findByUsername(String username);
         
 }
