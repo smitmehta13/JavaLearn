@@ -1,19 +1,17 @@
 package com.jlear.User;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    @Autowired
+    
     private final UserRepository userRepo;
+
 
     public UserService(UserRepository userRepository) {
         this.userRepo = userRepository;
@@ -24,23 +22,27 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public User getUserById(String id) {
+    public List<User> getUserById(String id) {
         try {
             System.out.println("getting user for id: " + id);
             User requestedUser = userRepo.findById("ID" + id)
                     .orElseThrow(() -> new NoSuchElementException("User not found"));
-            return requestedUser;
+            return List.of(
+                requestedUser
+            );
         } catch (NoSuchElementException e) {
 
             System.err.println("No user found for id: " + id);
 
-            return new User("", "No User found for id: " + id, "", "", LocalDate.now());
+            return List.of();
         }
     }
 
     public User createUser(User user) {
         // Save the user to the database
-        return userRepo.save(user);
+        user.age = User.calculateAge(user.getDob());
+        User savedUser = userRepo.save(user);
+        return savedUser;
     }
 
     public User updateUser(String id, User user) {
@@ -79,5 +81,16 @@ public class UserService {
         } 
         List<User> userFromDb = userRepo.findByUsername(name);
         return userFromDb;
+    }
+ 
+
+    public List<User> getUserByAge(Optional<Integer> age) {
+        if (age.isPresent()) {
+            System.out.println(age);
+            return userRepo.findByAge(age.get());
+        } else {
+            return userRepo.findAll();
+        }
+
     }
 }

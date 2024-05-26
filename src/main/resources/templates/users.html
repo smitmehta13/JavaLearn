@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaLear : Users</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            table, th, td {
+                width: 100%;
+                display: block;
+            }
+
+            th, td {
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            tr {
+                margin-bottom: 10px;
+            }
+
+            th {
+                background-color: transparent;
+                color: #333;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>JavaLear &rarr; Users</h1>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Email</th>
+                <th>Dob</th>
+                <th>Age</th>
+            </tr>
+            <tr th:each="user: ${users}">
+                <td th:text="${user.id}">ID</td>
+                <td th:text="${user.username}">username</td>
+                <td>
+                    <span style="display: none;" th:text="${user.password}">password</span>
+                    <button onclick="togglePassword(this)">Show Password</button></td><td th:text="${user.email}">email</td>
+                <td th:text="${user.dob}">dob</td>
+                <td th:text="${user.age}">age</td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        function togglePassword(button) {
+    var passwordSpan = button.previousElementSibling;
+    if (passwordSpan.style.display === "none") {
+        passwordSpan.style.display = "block";
+        button.textContent = "Hide Password";
+    } else {
+        passwordSpan.style.display = "none";
+        button.textContent = "Show Password";
+    }
+}
+    </script>
+</body>
+</html>

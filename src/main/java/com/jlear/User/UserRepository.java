@@ -12,5 +12,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     @Query("{ 'username' : ?0 }")
     List<User> findByUsername(String username);
+
+    List<User> findByAge(Integer integer);
         
 }

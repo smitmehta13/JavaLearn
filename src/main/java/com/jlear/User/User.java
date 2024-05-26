@@ -18,8 +18,7 @@ public class User {
     private String password;
     private String email;
     private LocalDate dob = LocalDate.of(999, Month.SEPTEMBER, 9);
-    @Transient
-    private int age;
+    @Transient int age;
 
     // Constructors
     public User() {
@@ -67,11 +66,7 @@ public class User {
     }
     
     public int getAge() {
-        if (this.dob.isAfter(LocalDate.of(1900, 1, 1))) {
-            return Period.between(this.dob, LocalDate.now()).getYears();
-        } else {
-            return 0;
-        }
+        return this.age;
     }
 
     public void setAge(int age) {
@@ -84,6 +79,19 @@ public class User {
 
     public void setDob(String dob) {
         this.dob = dob == null ? LocalDate.now() : LocalDate.parse(dob);
+    }
+
+    public static int calculateAge(LocalDate dob){
+        if (dob == null) {
+            throw new IllegalArgumentException("Date of birth cannot be null");
+        }
+    
+        LocalDate hundredYearsAgo = LocalDate.now().minusYears(100);
+        if (dob.isAfter(hundredYearsAgo)) {
+            return Period.between(dob, LocalDate.now()).getYears();
+        } else {
+            return 0;
+        }
     }
 
      // Other methods
